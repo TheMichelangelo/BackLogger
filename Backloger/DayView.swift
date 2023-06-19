@@ -1,5 +1,5 @@
 //
-//  BacklogView.swift
+//  DayView.swift
 //  Backloger
 //
 //  Created by Mike Pastula on 19.06.2023.
@@ -7,12 +7,12 @@
 
 import SwiftUI
 
-struct BacklogView: View {
+struct DayView: View {
     @State private var items : Array<BacklogItem>
     @State private var newTask : String
     
     init() {
-        if let data = UserDefaults.standard.data(forKey: "backlogList") {
+        if let data = UserDefaults.standard.data(forKey: "activityBacklogList") {
             let decoder = JSONDecoder()
             // Decode the data back into an array of Task structs
             if let decodedTasks = try? decoder.decode([BacklogItem].self, from: data) {
@@ -32,7 +32,7 @@ struct BacklogView: View {
                 LinearGradient(colors: [.red,.blue], startPoint: .top, endPoint: .bottom)
                     .ignoresSafeArea()
                 VStack{
-                    Text("My Backlog List").font(.largeTitle).fontWeight(.bold).padding(.top,50).foregroundColor(.white.opacity(0.7))
+                    Text("My Activity Backlog List").font(.largeTitle).fontWeight(.bold).padding(.top,50).foregroundColor(.white.opacity(0.7))
                     HStack{
                         TextField("New backlog item",text: $newTask)
                             .padding(.all)
@@ -77,13 +77,13 @@ struct BacklogView: View {
     }
     func saveItems() {
         if let encoded = try? JSONEncoder().encode(items) {
-            UserDefaults.standard.set(encoded, forKey: "backlogList")
+            UserDefaults.standard.set(encoded, forKey: "activityBacklogList")
         }
     }
 }
 
-struct BacklogView_Previews: PreviewProvider {
+struct DayView_Previews: PreviewProvider {
     static var previews: some View {
-        BacklogView()
+        DayView()
     }
 }
