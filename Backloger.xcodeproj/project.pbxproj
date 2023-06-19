@@ -14,6 +14,8 @@
 		BE1BF49D2A3F8A8B0086B833 /* BacklogerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE1BF49C2A3F8A8B0086B833 /* BacklogerTests.swift */; };
 		BE1BF4A72A3F8A8B0086B833 /* BacklogerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE1BF4A62A3F8A8B0086B833 /* BacklogerUITests.swift */; };
 		BE1BF4A92A3F8A8B0086B833 /* BacklogerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE1BF4A82A3F8A8B0086B833 /* BacklogerUITestsLaunchTests.swift */; };
+		BE1BF4B82A40EB760086B833 /* BacklogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE1BF4B72A40EB760086B833 /* BacklogView.swift */; };
+		BE1BF4BA2A40F38B0086B833 /* BacklogItemStructures.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE1BF4B92A40F38B0086B833 /* BacklogItemStructures.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +46,8 @@
 		BE1BF4A22A3F8A8B0086B833 /* BacklogerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BacklogerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE1BF4A62A3F8A8B0086B833 /* BacklogerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BacklogerUITests.swift; sourceTree = "<group>"; };
 		BE1BF4A82A3F8A8B0086B833 /* BacklogerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BacklogerUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		BE1BF4B72A40EB760086B833 /* BacklogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BacklogView.swift; sourceTree = "<group>"; };
+		BE1BF4B92A40F38B0086B833 /* BacklogItemStructures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BacklogItemStructures.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,7 +98,9 @@
 		BE1BF48A2A3F8A8A0086B833 /* Backloger */ = {
 			isa = PBXGroup;
 			children = (
+				BE1BF4B92A40F38B0086B833 /* BacklogItemStructures.swift */,
 				BE1BF48B2A3F8A8A0086B833 /* BacklogerApp.swift */,
+				BE1BF4B72A40EB760086B833 /* BacklogView.swift */,
 				BE1BF48D2A3F8A8A0086B833 /* ContentView.swift */,
 				BE1BF48F2A3F8A8B0086B833 /* Assets.xcassets */,
 				BE1BF4912A3F8A8B0086B833 /* Preview Content */,
@@ -257,7 +263,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BE1BF4B82A40EB760086B833 /* BacklogView.swift in Sources */,
 				BE1BF48E2A3F8A8A0086B833 /* ContentView.swift in Sources */,
+				BE1BF4BA2A40F38B0086B833 /* BacklogItemStructures.swift in Sources */,
 				BE1BF48C2A3F8A8A0086B833 /* BacklogerApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -432,6 +440,9 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mpast.Backloger;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -461,6 +472,9 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mpast.Backloger;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

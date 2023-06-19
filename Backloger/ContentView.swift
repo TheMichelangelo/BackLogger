@@ -9,14 +9,16 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+          // объявляем NavigationView единожды на первом экране
+            NavigationView {
+                NavigationLink {
+                    BacklogView()
+                } label: {
+                    Text("Go to unread books")
+                }
+                .navigationTitle("Main Screen")
+            }
         }
-        .padding()
-    }
 }
 
 struct ContentView_Previews: PreviewProvider {
