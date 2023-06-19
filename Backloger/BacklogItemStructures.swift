@@ -8,34 +8,62 @@
 import Foundation
 
 struct BacklogItem : Identifiable, Codable{
-    let id: UUID
-    let task: String
+    var id: UUID
+    var task: String
+    var complete: Bool
     
     init(task: String){
         self.id = UUID()
-        self.task=task
+        self.task = task
+        self.complete = false
+    }
+    
+    init(){
+        self.id = UUID()
+        self.task = "task"
+        self.complete = false
     }
 }
 
 struct BacklogList : Codable{
-    let currentItem: BacklogItem
-    let items: [BacklogItem]
+    var currentItem: BacklogItem
+    var items: [BacklogItem]
+    
+    init(){
+        currentItem=BacklogItem()
+        items=[]
+    }
 }
 
 struct BacklogListAll : Codable{
-    let bookItems: [BacklogList]
-    let comicsItems: [BacklogList]
-    let gameItems: [BacklogList]
-    let activityItems: [BacklogList]
+    var bookItems: BacklogList
+    var comicsItems: BacklogList
+    var playstationGameItems: BacklogList
+    var xboxGameItems: BacklogList
+    var switchGameItems: BacklogList
+    var pcGameItems: BacklogList
+    var activityItems: BacklogList
+    
+    init(){
+        bookItems=BacklogList()
+        comicsItems=BacklogList()
+        playstationGameItems=BacklogList()
+        xboxGameItems=BacklogList()
+        switchGameItems=BacklogList()
+        pcGameItems=BacklogList()
+        activityItems=BacklogList()
+    }
 }
 
 struct ActivityBacklogItem: Identifiable, Codable{
     let id: UUID
     let task: String
+    let complete: Bool
     
     init(task: String){
         self.id = UUID()
         self.task=task
+        self.complete = false
     }
 }
 
@@ -53,11 +81,13 @@ struct BuyBacklogItem : Identifiable, Codable{
     let id: UUID
     let task: String
     let price: Int
+    let complete: Bool
     
     init(task: String){
         self.id = UUID()
         self.task=task
         self.price=0
+        self.complete = false
     }
 }
 

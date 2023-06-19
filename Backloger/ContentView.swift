@@ -7,76 +7,181 @@
 
 import SwiftUI
 
+enum Category: String, CaseIterable, Identifiable {
+    case gamesPS, gamesXbox, gamesSwitch, gamesPC, comics, books, activities
+    
+    var id: Self { self }
+}
+
 struct ContentView: View {
-    @State private var items : Array<BacklogItem>
-    @State private var newTask : String
+    @State private var selectedCategory: Category = .comics
+    @State private var newTask: String = ""
+    @State private var backlogList: BacklogListAll
+    
+    @State private var currentSelectedBacklog: BacklogList
     
     init() {
-        if let data = UserDefaults.standard.data(forKey: "backlogList") {
-            let decoder = JSONDecoder()
-            // Decode the data back into an array of Task structs
-            if let decodedTasks = try? decoder.decode([BacklogItem].self, from: data) {
-                self.items = decodedTasks
-            }else{
-                self.items = [BacklogItem]()
+            _selectedCategory = State(initialValue: Category.comics)
+            _newTask = State(initialValue: "")
+            _currentSelectedBacklog = State(initialValue: BacklogList())
+            if let data = UserDefaults.standard.data(forKey: "backlogList") {
+                let decoder = JSONDecoder()
+                if let decodedTasks = try? decoder.decode(BacklogListAll.self, from: data) {
+                    _backlogList = State(initialValue: decodedTasks)
+                } else {
+                    _backlogList = State(initialValue: BacklogListAll())
+                }
+            } else {
+                _backlogList = State(initialValue: BacklogListAll())
             }
-        }else{
-            self.items = [BacklogItem]()
-        }
-        newTask = ""
+            
+            _currentSelectedBacklog = State(initialValue: backlogList.comicsItems)
     }
     
     var body: some View {
         VStack {
-            ZStack{
-                LinearGradient(colors: [.red,.blue], startPoint: .top, endPoint: .bottom)
+            ZStack {
+                LinearGradient(colors: [.red, .blue], startPoint: .top, endPoint: .bottom)
                     .ignoresSafeArea()
-                VStack{
-                    Text("My Backlog List").font(.largeTitle).fontWeight(.bold).padding(.top,50).foregroundColor(.white.opacity(0.7))
+                VStack {
+                    Text("My Backlog List")
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                        .padding(.top, 1)
+                        .foregroundColor(.white.opacity(0.7))
+                    
+                    Picker("Category", selection: $selectedCategory) {
+                        ForEach(Category.allCases) { category in
+                            Text(category.rawValue.capitalized).tag(category)
+                        }
+                    }
+                    .onChange(of: selectedCategory) { _ in
+                        changeCategory()
+                    }
+                    let totalProgress =  Float(currentSelectedBacklog.items.filter{$0.complete == true}.count) / Float(currentSelectedBacklog.items.count-1)
+                    ProgressView(value: totalProgress,total: 1)
+                        .shadow(color: Color(red: 0, green: 0, blue: 0.6), radius: 4.0, x: 1.0, y: 2.0)
+                    Label(currentSelectedBacklog.currentItem.task, systemImage: "bolt.fill")
+                    Button(action:setRandomItem){
+                    Text("Randomise current").foregroundColor(.white.opacity(0.7))
+                    }.buttonStyle(.bordered)
+                
                     HStack{
-                        TextField("New backlog item",text: $newTask)
-                            .padding(.all)
-                            .background(.regularMaterial)
-                            .cornerRadius(25)
-                            .accentColor(.red)
-                        Button(action:addTask){
+                            TextField("New backlog item",text: $newTask)
+                                    .padding(.all)
+                                    .background(.regularMaterial)
+                                    .cornerRadius(25)
+                                    .accentColor(.red)
+                            Button(action:addTask){
                             Text("Add").foregroundColor(.white.opacity(0.7))
                         }.buttonStyle(.bordered)
                     }
                 }
             }
-                .frame(height:200)
-                VStack{
-                    List(items){
-                        item in HStack{
-                            Text(item.task).foregroundColor(.blue)
-                            ProgressView(value: 5, total: 15)
-                        }.swipeActions{Button(role:.destructive){
+            .frame(height: 200)
+            
+            VStack {
+                List(currentSelectedBacklog.items.filter{ $0.complete == false }) { item in
+                    HStack {
+                        Text(item.task)
+                            .foregroundColor(.blue)
+                    }
+                    .swipeActions(edge: .leading) {
+                        Button(role: .destructive) {
                             removeTask(item)
-                        }label: {
-                            Label("Delete item",systemImage: "trash")
+                        } label: {
+                            Label("Delete item", systemImage: "trash")
+                        }
+                    }
+                    .swipeActions(edge: .trailing) {
+                        Button(role: .destructive) {
+                            completeTask(item)
+                        } label: {
+                            Label("Complete item", systemImage: "visa")
                         }
                     }
                 }
-                    Text("Created by @mpast").font(.title2).foregroundColor(.orange)
+                
+                Text("Created by @mpast")
+                    .font(.title2)
+                    .foregroundColor(.orange)
             }
         }
     }
-    func addTask(){
+    
+    func changeCategory() {
+        switch selectedCategory {
+        case .comics:
+            currentSelectedBacklog = backlogList.comicsItems
+        case .books:
+            currentSelectedBacklog = backlogList.bookItems
+        case .activities:
+            currentSelectedBacklog = backlogList.activityItems
+        case .gamesPS:
+            currentSelectedBacklog = backlogList.playstationGameItems
+        case .gamesSwitch:
+            currentSelectedBacklog = backlogList.switchGameItems
+        case .gamesPC:
+            currentSelectedBacklog = backlogList.pcGameItems
+        case .gamesXbox:
+            currentSelectedBacklog = backlogList.xboxGameItems
+        }
+    }
+    
+    func saveCategory() {
+        switch selectedCategory {
+        case .comics:
+            backlogList.comicsItems  = currentSelectedBacklog
+        case .books:
+            backlogList.bookItems = currentSelectedBacklog
+        case .activities:
+            backlogList.activityItems = currentSelectedBacklog
+        case .gamesPS:
+            backlogList.playstationGameItems = currentSelectedBacklog
+        case .gamesSwitch:
+            backlogList.switchGameItems = currentSelectedBacklog
+        case .gamesPC:
+            backlogList.pcGameItems = currentSelectedBacklog
+        case .gamesXbox:
+            backlogList.xboxGameItems = currentSelectedBacklog
+        }
+    }
+    
+    func addTask() {
         guard !newTask.isEmpty else {
             return
         }
-                
-        items.append(BacklogItem(task: newTask))
+        
+        let newItem = BacklogItem(task: newTask)
+        currentSelectedBacklog.items.append(newItem)
+        saveCategory()
         saveItems()
-            newTask = ""
+
+        newTask = ""
     }
-    func removeTask(_ item: BacklogItem){
-        items.removeAll{$0.id == item.id}
+    func setRandomItem(){
+        currentSelectedBacklog.currentItem = currentSelectedBacklog.items.filter{ $0.complete == false }.randomElement()!
+        saveCategory()
         saveItems()
     }
+    func removeTask(_ item: BacklogItem) {
+        currentSelectedBacklog.items.removeAll { $0.id == item.id }
+        saveCategory()
+        saveItems()
+    }
+    
+    func completeTask(_ item: BacklogItem) {
+        for i in 1 ..< currentSelectedBacklog.items.count {
+            if currentSelectedBacklog.items[i].id == item.id{
+                currentSelectedBacklog.items[i].complete=true
+            }
+        }
+        saveCategory()
+        saveItems()
+    }
+    
     func saveItems() {
-        if let encoded = try? JSONEncoder().encode(items) {
+        if let encoded = try? JSONEncoder().encode(backlogList) {
             UserDefaults.standard.set(encoded, forKey: "backlogList")
         }
     }
