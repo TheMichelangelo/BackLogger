@@ -118,11 +118,12 @@ struct DayView: View {
                 .background(Color.gray.opacity(0.2))
                 .cornerRadius(8)
 
-                
-                let prevDays = buildDayHistory()
-                List {
-                    ForEach(prevDays, id: \.title) {
-                        listItem in listItem
+                if !backlogList.days.isEmpty{
+                    let prevDays = buildDayHistory()
+                    List {
+                        ForEach(prevDays, id: \.title) {
+                            listItem in listItem
+                        }
                     }
                 }
                 Text("Created by @mpast")
