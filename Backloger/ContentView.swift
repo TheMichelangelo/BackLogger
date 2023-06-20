@@ -8,7 +8,7 @@
 import SwiftUI
 
 enum Category: String, CaseIterable, Identifiable {
-    case games_playstation, games_xbox, games_switch, games_windows, comics, books, activities
+    case games_playstation, games_xbox, games_switch, games_windows, comics, books, activities, lego
     
     var id: Self { self }
 }
@@ -20,7 +20,6 @@ struct ContentView: View {
     @State private var backlogList: BacklogListAll
     @State private var backlogItemsList: [BacklogItem]
     @State private var totalProgress: Float
-    
     @State private var currentSelectedBacklog: BacklogList
     
     init() {
@@ -161,7 +160,10 @@ struct ContentView: View {
             currentSelectedBacklog = backlogList.pcGameItems
         case .games_xbox:
             currentSelectedBacklog = backlogList.xboxGameItems
+        case .lego:
+            currentSelectedBacklog = backlogList.legoItems
         }
+        
         changeCompleteCategory()
         totalProgress = currentSelectedBacklog.items.count == 0 ? 1 : Float(self.currentSelectedBacklog.items.filter{$0.complete == true}.count) / Float(self.currentSelectedBacklog.items.count)
     }
@@ -182,6 +184,8 @@ struct ContentView: View {
             backlogList.pcGameItems = currentSelectedBacklog
         case .games_xbox:
             backlogList.xboxGameItems = currentSelectedBacklog
+        case .lego:
+            backlogList.legoItems = currentSelectedBacklog
         }
     }
     

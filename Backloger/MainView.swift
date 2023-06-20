@@ -35,11 +35,17 @@ struct MainView: View {
                     } label: {
                         Text("See day activities")
                     }.buttonStyle(GrowingButton())
-                        .padding([.bottom], 120)
+                        .padding([.bottom], 240)
                     NavigationLink {
                         ContentView()
                     } label: {
                         Text("See backlog")
+                    }.buttonStyle(GrowingButton())
+                        .padding([.bottom], 120)
+                    NavigationLink {
+                        ShopListView()
+                    } label: {
+                        Text("See buy list")
                     }.buttonStyle(GrowingButton())
                 }
             }
