@@ -11,5 +11,5 @@ To do list(for future):
   <li>Add congrats pop-up after completing item|set of items</li>
 </ul>
 <hr>
-<b> Demo:</b><br>
+<b> Demo:</b>
 ![Demo](https://github.com/TheMichelangelo/BackLogger/blob/main/demo.gif)
