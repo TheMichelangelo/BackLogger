@@ -8,7 +8,7 @@
 import SwiftUI
 
 enum Category: String, CaseIterable, Identifiable {
-    case gamesPS, gamesXbox, gamesSwitch, gamesPC, comics, books, activities
+    case games_playstation, games_xbox, games_switch, games_PC, comics, books, activities
     
     var id: Self { self }
 }
@@ -117,13 +117,13 @@ struct ContentView: View {
             currentSelectedBacklog = backlogList.bookItems
         case .activities:
             currentSelectedBacklog = backlogList.activityItems
-        case .gamesPS:
+        case .games_playstation:
             currentSelectedBacklog = backlogList.playstationGameItems
-        case .gamesSwitch:
+        case .games_switch:
             currentSelectedBacklog = backlogList.switchGameItems
-        case .gamesPC:
+        case .games_PC:
             currentSelectedBacklog = backlogList.pcGameItems
-        case .gamesXbox:
+        case .games_xbox:
             currentSelectedBacklog = backlogList.xboxGameItems
         }
     }
@@ -136,13 +136,13 @@ struct ContentView: View {
             backlogList.bookItems = currentSelectedBacklog
         case .activities:
             backlogList.activityItems = currentSelectedBacklog
-        case .gamesPS:
+        case .games_playstation:
             backlogList.playstationGameItems = currentSelectedBacklog
-        case .gamesSwitch:
+        case .games_switch:
             backlogList.switchGameItems = currentSelectedBacklog
-        case .gamesPC:
+        case .games_PC:
             backlogList.pcGameItems = currentSelectedBacklog
-        case .gamesXbox:
+        case .games_xbox:
             backlogList.xboxGameItems = currentSelectedBacklog
         }
     }
@@ -181,6 +181,10 @@ struct ContentView: View {
                 currentSelectedBacklog.items[i].complete=true
             }
         }
+        if currentSelectedBacklog.currentItem.id == item.id{
+            setRandomItem()
+        }
+        
         saveCategory()
         saveItems()
     }
