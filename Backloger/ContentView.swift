@@ -198,7 +198,7 @@ struct ContentView: View {
         }
         saveCategory()
         saveItems()
-
+        changeCompleteCategory()
         newTask = ""
     }
     func setRandomItem(){
@@ -211,6 +211,7 @@ struct ContentView: View {
         currentSelectedBacklog.items.removeAll { $0.id == item.id }
         saveCategory()
         saveItems()
+        changeCompleteCategory()
     }
     
     func completeTask(_ item: BacklogItem) {
@@ -223,7 +224,7 @@ struct ContentView: View {
         if currentSelectedBacklog.currentItem.id == item.id{
             setRandomItem()
         }
-        
+        changeCompleteCategory()
         saveCategory()
         saveItems()
     }
