@@ -22,29 +22,30 @@ struct GrowingButton: ButtonStyle {
 struct MainView: View {
     var body: some View {
         
-        let quotes = ["Screw that!", "D’oh!", "Jokes: Short, sweet, funny."]
+        let quotes = ["Screw that!", "D’oh!","Jokes: Short, sweet, funny."]
         
         NavigationView {
-                    VStack {
-                        ZStack {
-                            LinearGradient(colors: [.red, .blue], startPoint: .top, endPoint: .bottom)
-                                .ignoresSafeArea()
-                            NavigationLink {
-                                DayView()
-                            } label: {
-                                Text("See day activities")
-                            }.buttonStyle(GrowingButton())
-                            .padding([.bottom, .trailing], 120)
-                            NavigationLink {
-                                ContentView()
-                            } label: {
-                                Text("See backlog")
-                            }.buttonStyle(GrowingButton())
-                        }
-                    }
-                    .navigationTitle(quotes.randomElement()!)
+            VStack {
+                ZStack {
+                    LinearGradient(colors: [.red, .blue], startPoint: .top, endPoint: .bottom)
+                        .ignoresSafeArea()
+                    Spacer()
+                    NavigationLink {
+                        DayView()
+                    } label: {
+                        Text("See day activities")
+                    }.buttonStyle(GrowingButton())
+                        .padding([.bottom], 120)
+                    NavigationLink {
+                        ContentView()
+                    } label: {
+                        Text("See backlog")
+                    }.buttonStyle(GrowingButton())
                 }
+            }
+            .navigationTitle(quotes.randomElement()!)
         }
+    }
 }
 
 struct MainView_Previews: PreviewProvider {

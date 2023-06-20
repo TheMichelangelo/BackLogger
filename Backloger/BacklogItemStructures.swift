@@ -61,10 +61,11 @@ struct BacklogListAll : Codable{
     }
 }
 
-struct ActivityBacklogItem: Identifiable, Codable{
-    let id: UUID
-    let task: String
-    let complete: Bool
+//---------DAY ACTIVITY-------------------
+struct ActivityBacklogItem: Identifiable, Codable, Hashable{
+    var id: UUID
+    var task: String
+    var complete: Bool
     var dateAdded: Date
     
     init(task: String){
@@ -76,15 +77,29 @@ struct ActivityBacklogItem: Identifiable, Codable{
 }
 
 struct DayActivityBacklogList : Codable{
-    let currentItem: Date
-    let items: [ActivityBacklogItem]
+    var currentDate: Date
+    var items: [ActivityBacklogItem]
+    
+    init(){
+        self.currentDate = Date()
+        self.items = [ActivityBacklogItem]()
+    }
+    
+    init(items: [ActivityBacklogItem]){
+        self.currentDate = Date()
+        self.items = [ActivityBacklogItem]()
+    }
 }
 
 struct ActivityBacklogListAll : Codable{
-    let days: [DayActivityBacklogList]
+    var days: [DayActivityBacklogList]
+    
+    init(){
+        self.days = [DayActivityBacklogList]()
+    }
 }
 
-
+//TODO use in future if develipment will continue
 struct BuyBacklogItem : Identifiable, Codable{
     let id: UUID
     let task: String

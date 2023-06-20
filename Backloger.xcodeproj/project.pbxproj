@@ -18,6 +18,7 @@
 		BE1BF4BC2A40F8CB0086B833 /* DayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE1BF4BB2A40F8CB0086B833 /* DayView.swift */; };
 		BE1BF4BF2A40FCD80086B833 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE1BF4BE2A40FCD80086B833 /* ContentView.swift */; };
 		BE1BF4C12A4113F80086B833 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = BE1BF4C02A4113F80086B833 /* logo.png */; };
+		BE1BF4C32A41CB4D0086B833 /* ExpandableListItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE1BF4C22A41CB4D0086B833 /* ExpandableListItemView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +53,7 @@
 		BE1BF4BB2A40F8CB0086B833 /* DayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayView.swift; sourceTree = "<group>"; };
 		BE1BF4BE2A40FCD80086B833 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		BE1BF4C02A4113F80086B833 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
+		BE1BF4C22A41CB4D0086B833 /* ExpandableListItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandableListItemView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +109,7 @@
 				BE1BF48D2A3F8A8A0086B833 /* MainView.swift */,
 				BE1BF4BE2A40FCD80086B833 /* ContentView.swift */,
 				BE1BF4BB2A40F8CB0086B833 /* DayView.swift */,
+				BE1BF4C22A41CB4D0086B833 /* ExpandableListItemView.swift */,
 				BE1BF48F2A3F8A8B0086B833 /* Assets.xcassets */,
 				BE1BF4C02A4113F80086B833 /* logo.png */,
 				BE1BF4912A3F8A8B0086B833 /* Preview Content */,
@@ -275,6 +278,7 @@
 				BE1BF48E2A3F8A8A0086B833 /* MainView.swift in Sources */,
 				BE1BF4BA2A40F38B0086B833 /* BacklogItemStructures.swift in Sources */,
 				BE1BF48C2A3F8A8A0086B833 /* BacklogerApp.swift in Sources */,
+				BE1BF4C32A41CB4D0086B833 /* ExpandableListItemView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
