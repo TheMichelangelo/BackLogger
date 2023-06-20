@@ -83,7 +83,7 @@ struct DayView: View {
             let completedItemsCount = currentSelectedBacklog.items.filter { $0.complete }.count
             let progress = currentSelectedBacklog.items.isEmpty ? 1 : Float(completedItemsCount) / Float(currentSelectedBacklog.items.count)
             let uncompleteItems = currentSelectedBacklog.items.filter { !$0.complete }
-            let minHeight = CGFloat(uncompleteItems.count) * 80
+            let minHeight = uncompleteItems.count>3 ? 200 : CGFloat(uncompleteItems.count) * 80
             VStack {
                 DisclosureGroup(isExpanded: $isExpanded) {
                     VStack {

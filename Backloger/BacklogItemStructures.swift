@@ -49,7 +49,6 @@ struct BacklogListAll : Codable{
     var switchGameItems: BacklogList
     var pcGameItems: BacklogList
     var activityItems: BacklogList
-    var legoItems: BacklogList
     
     init(){
         bookItems=BacklogList()
@@ -59,7 +58,6 @@ struct BacklogListAll : Codable{
         switchGameItems=BacklogList()
         pcGameItems=BacklogList()
         activityItems=BacklogList()
-        legoItems=BacklogList()
     }
 }
 
