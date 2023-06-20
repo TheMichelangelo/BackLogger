@@ -19,10 +19,12 @@ struct ContentView: View {
     @State private var newTask: String = ""
     @State private var backlogList: BacklogListAll
     @State private var backlogItemsList: [BacklogItem]
+    @State private var totalProgress: Float
     
     @State private var currentSelectedBacklog: BacklogList
     
     init() {
+        _totalProgress = State(initialValue: 1.0)
         _selectedCategory = State(initialValue: Category.comics)
         _newTask = State(initialValue: "")
         _backlogItemsList = State(initialValue: [BacklogItem]())
@@ -39,7 +41,11 @@ struct ContentView: View {
         }
         _currentSelectedBacklog = State(initialValue: backlogList.comicsItems)
         _backlogItemsList = State(initialValue: currentSelectedBacklog.items.filter{ $0.complete == false })
- 
+        if !_currentSelectedBacklog.wrappedValue.items.isEmpty{
+            let completedItemsCount = currentSelectedBacklog.items.filter { $0.complete }.count
+            let progress = Float(completedItemsCount) / Float(currentSelectedBacklog.items.count)
+            _totalProgress = State(initialValue: progress)
+        }
     }
     
     var body: some View {
@@ -62,14 +68,14 @@ struct ContentView: View {
                     .onChange(of: selectedCategory) { _ in
                         changeCategory()
                     }
-                    let totalProgress =  Float(currentSelectedBacklog.items.filter{$0.complete == true}.count) / Float(currentSelectedBacklog.items.count)
+                    
                     ProgressView(value: totalProgress,total: 1)
                         .shadow(color: Color(red: 0, green: 0, blue: 0.6), radius: 4.0, x: 1.0, y: 2.0)
                     Label(currentSelectedBacklog.currentItem.task, systemImage: "bolt.fill")
                     Button(action:setRandomItem){
                     Text("Randomise current").foregroundColor(.white.opacity(0.7))
                     }.buttonStyle(.bordered)
-                
+                    
                     HStack{
                             TextField("New backlog item",text: $newTask)
                                     .padding(.all)
@@ -156,6 +162,8 @@ struct ContentView: View {
         case .games_xbox:
             currentSelectedBacklog = backlogList.xboxGameItems
         }
+        changeCompleteCategory()
+        totalProgress = currentSelectedBacklog.items.count == 0 ? 1 : Float(self.currentSelectedBacklog.items.filter{$0.complete == true}.count) / Float(self.currentSelectedBacklog.items.count)
     }
     
     func saveCategory() {
@@ -209,6 +217,7 @@ struct ContentView: View {
         for i in 1 ..< currentSelectedBacklog.items.count {
             if currentSelectedBacklog.items[i].id == item.id{
                 currentSelectedBacklog.items[i].complete=true
+                currentSelectedBacklog.items[i].dateCompleted = Date()
             }
         }
         if currentSelectedBacklog.currentItem.id == item.id{

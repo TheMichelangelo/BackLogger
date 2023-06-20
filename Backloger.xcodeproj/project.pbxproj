@@ -104,9 +104,9 @@
 			children = (
 				BE1BF48B2A3F8A8A0086B833 /* BacklogerApp.swift */,
 				BE1BF4B92A40F38B0086B833 /* BacklogItemStructures.swift */,
+				BE1BF48D2A3F8A8A0086B833 /* MainView.swift */,
 				BE1BF4BE2A40FCD80086B833 /* ContentView.swift */,
 				BE1BF4BB2A40F8CB0086B833 /* DayView.swift */,
-				BE1BF48D2A3F8A8A0086B833 /* MainView.swift */,
 				BE1BF48F2A3F8A8B0086B833 /* Assets.xcassets */,
 				BE1BF4C02A4113F80086B833 /* logo.png */,
 				BE1BF4912A3F8A8B0086B833 /* Preview Content */,
