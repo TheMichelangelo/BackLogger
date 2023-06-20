@@ -14,28 +14,32 @@ enum Category: String, CaseIterable, Identifiable {
 }
 
 struct ContentView: View {
+    @State private var completedCategory: CompleteCategory = .uncompleted
     @State private var selectedCategory: Category = .comics
     @State private var newTask: String = ""
     @State private var backlogList: BacklogListAll
+    @State private var backlogItemsList: [BacklogItem]
     
     @State private var currentSelectedBacklog: BacklogList
     
     init() {
-            _selectedCategory = State(initialValue: Category.comics)
-            _newTask = State(initialValue: "")
-            _currentSelectedBacklog = State(initialValue: BacklogList())
-            if let data = UserDefaults.standard.data(forKey: "backlogList") {
-                let decoder = JSONDecoder()
-                if let decodedTasks = try? decoder.decode(BacklogListAll.self, from: data) {
-                    _backlogList = State(initialValue: decodedTasks)
-                } else {
-                    _backlogList = State(initialValue: BacklogListAll())
-                }
+        _selectedCategory = State(initialValue: Category.comics)
+        _newTask = State(initialValue: "")
+        _backlogItemsList = State(initialValue: [BacklogItem]())
+        _currentSelectedBacklog = State(initialValue: BacklogList())
+        if let data = UserDefaults.standard.data(forKey: "backlogList") {
+            let decoder = JSONDecoder()
+            if let decodedTasks = try? decoder.decode(BacklogListAll.self, from: data) {
+                _backlogList = State(initialValue: decodedTasks)
             } else {
                 _backlogList = State(initialValue: BacklogListAll())
             }
-            
-            _currentSelectedBacklog = State(initialValue: backlogList.comicsItems)
+        } else {
+            _backlogList = State(initialValue: BacklogListAll())
+        }
+        _currentSelectedBacklog = State(initialValue: backlogList.comicsItems)
+        _backlogItemsList = State(initialValue: currentSelectedBacklog.items.filter{ $0.complete == false })
+ 
     }
     
     var body: some View {
@@ -81,23 +85,39 @@ struct ContentView: View {
             .frame(height: 200)
             
             VStack {
-                List(currentSelectedBacklog.items.filter{ $0.complete == false }) { item in
-                    HStack {
-                        Text(item.task)
-                            .foregroundColor(.blue)
+                Picker("Completed", selection: $completedCategory) {
+                    ForEach(CompleteCategory.allCases) { category in
+                        Text(category.rawValue.capitalized).tag(category)
+                    }.onChange(of: completedCategory) { _ in
+                        changeCompleteCategory()
                     }
-                    .swipeActions(edge: .leading) {
-                        Button(role: .destructive) {
-                            removeTask(item)
-                        } label: {
-                            Label("Delete item", systemImage: "trash")
+                }.pickerStyle(SegmentedPickerStyle())
+                if completedCategory == CompleteCategory.uncompleted{
+                    List(backlogItemsList) { item in
+                        HStack {
+                            Text(item.task)
+                                .foregroundColor(.blue)
+                        }
+                        .swipeActions(edge: .leading) {
+                            Button(role: .destructive) {
+                                removeTask(item)
+                            } label: {
+                                Label("Delete item", systemImage: "trash")
+                            }
+                        }
+                        .swipeActions(edge: .trailing) {
+                            Button(role: .destructive) {
+                                completeTask(item)
+                            } label: {
+                                Label("Complete item", systemImage: "visa")
+                            }
                         }
                     }
-                    .swipeActions(edge: .trailing) {
-                        Button(role: .destructive) {
-                            completeTask(item)
-                        } label: {
-                            Label("Complete item", systemImage: "visa")
+                }else{
+                    List(backlogItemsList) { item in
+                        HStack {
+                            Text(item.task)
+                                .foregroundColor(.blue)
                         }
                     }
                 }
@@ -106,6 +126,16 @@ struct ContentView: View {
                     .font(.title2)
                     .foregroundColor(.orange)
             }
+        }
+    }
+    
+    
+    func changeCompleteCategory() {
+        switch completedCategory {
+        case .uncompleted:
+            backlogItemsList = currentSelectedBacklog.items.filter{ $0.complete == false }
+        case .completed:
+            backlogItemsList = currentSelectedBacklog.items.filter{ $0.complete == true }
         }
     }
     
@@ -164,7 +194,7 @@ struct ContentView: View {
         newTask = ""
     }
     func setRandomItem(){
-        currentSelectedBacklog.currentItem = currentSelectedBacklog.items.filter{ $0.complete == false }.randomElement()!
+        currentSelectedBacklog.currentItem = backlogItemsList.randomElement()!
         
         saveCategory()
         saveItems()

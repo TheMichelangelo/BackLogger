@@ -12,12 +12,14 @@ struct BacklogItem : Identifiable, Codable{
     var task: String
     var complete: Bool
     var dateAdded: Date
+    var dateCompleted: Date
     
     init(task: String){
         self.id = UUID()
         self.task = task
         self.complete = false
         self.dateAdded = Date()
+        self.dateCompleted = Date()
     }
     
     init(){
@@ -25,6 +27,7 @@ struct BacklogItem : Identifiable, Codable{
         self.task = "task"
         self.complete = false
         self.dateAdded = Date()
+        self.dateCompleted = Date()
     }
 }
 
@@ -107,4 +110,10 @@ struct BuyBacklogListAll : Codable{
     let comicsItems: [BacklogList]
     let gameItems: [BacklogList]
     let activityItems: [BacklogList]
+}
+
+enum CompleteCategory: String, CaseIterable, Identifiable {
+    case completed, uncompleted
+    
+    var id: Self { self }
 }
