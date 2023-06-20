@@ -80,8 +80,45 @@ struct DayView: View {
             }
             .frame(height: 150)
             
+            let completedItemsCount = currentSelectedBacklog.items.filter { $0.complete }.count
+            let progress = Float(completedItemsCount) / Float(currentSelectedBacklog.items.count)
+            let uncompleteItems = currentSelectedBacklog.items.filter { !$0.complete }
+            let minHeight = CGFloat(uncompleteItems.count) * 80
             VStack {
-                //TODO rewrite into expandable list
+                DisclosureGroup(isExpanded: $isExpanded) {
+                    VStack {
+                        ProgressView(value: progress, total: 1)
+                        List(uncompleteItems) { item in
+                            HStack {
+                                Text(item.task)
+                                    .padding(.leading)
+                                    .foregroundColor(.green)
+                            }
+                            .swipeActions(edge: .leading) {
+                                Button(role: .destructive) {
+                                    removeTask(item)
+                                } label: {
+                                    Label("Delete item", systemImage: "trash")
+                                }
+                            }
+                            .swipeActions(edge: .trailing) {
+                                Button(role: .destructive) {
+                                    completeTask(item)
+                                } label: {
+                                    Label("Complete item", systemImage: "visa")
+                                }
+                            }
+                        }
+                    }.frame(minHeight: minHeight).edgesIgnoringSafeArea(.all)
+                } label: {
+                    Text("Today").font(.headline)
+                }
+                .padding()
+                .foregroundColor(.blue)
+                .background(Color.gray.opacity(0.2))
+                .cornerRadius(8)
+
+                
                 let prevDays = buildDayHistory()
                 List {
                     ForEach(prevDays, id: \.title) {
@@ -101,7 +138,7 @@ struct DayView: View {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "YY/MM/dd"
 
-            for i in 0 ..< backlogList.days.count{
+            for i in 1 ..< backlogList.days.count{
                 prevDays.append(ExpandableListItemView(
                     title: dateFormatter.string(from: backlogList.days[i].currentDate),
                     items:backlogList.days[i].items))
