@@ -10,7 +10,6 @@ import SwiftUI
 struct DayView: View {
     @State private var totalProgress: Float
     @State private var newTask: String = ""
-    @State private var completedCategory: CompleteCategory = .uncompleted
     @State private var backlogList: ActivityBacklogListAll
     @State private var currentBacklogList: DayActivityBacklogList
     @State private var isExpanded = false
@@ -85,61 +84,110 @@ struct DayView: View {
             .frame(height: 200)
             
             VStack {
-  
+                DisclosureGroup(isExpanded: $isExpanded) {
+                    let completedItemsCount = currentBacklogList.items.filter { $0.complete }.count
+                    let progress = Float(completedItemsCount) / Float(currentBacklogList.items.count)
+                    ProgressView(value: progress,total: 1)
+                    VStack{
+                        List(currentBacklogList.items.filter { !$0.complete }) { item in
+                            HStack {
+                                Text(item.task).padding(.leading)
+                                    .foregroundColor(.green)
+                            }
+                            .swipeActions(edge: .leading) {
+                                Button(role: .destructive) {
+                                    removeTask(item)
+                                } label: {
+                                    Label("Delete item", systemImage: "trash")
+                                }
+                            }
+                            .swipeActions(edge: .trailing) {
+                                Button(role: .destructive) {
+                                    completeTask(item)
+                                } label: {
+                                    Label("Complete item", systemImage: "visa")
+                                }
+                            }
+                        }
+                        var prevDays = buildDayHistory()
+                        ForEach(prevDays, id: \.title) { listItem in
+                                        listItem
+                                    }
+                    }
+                } label: {
+                    Text("Today")
+                        .font(.headline)
+                }
+                .padding()
+                .foregroundColor(.blue)
+                .background(Color.gray.opacity(0.2))
+                .cornerRadius(8)
+                
+                //TODO add expandable dropdown lists for every day
                 Text("Created by @mpast")
                     .font(.title2)
                     .foregroundColor(.orange)
             }
         }
     }
+    
+    func buildDayHistory() -> [ExpandableListItemView] {
+        var prevDays = [ExpandableListItemView]()
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "YY/MM/dd"
 
-    func changeCompleteCategory() {
-        /*switch completedCategory {
-        case .uncompleted:
-            //backlogItemsList = currentSelectedBacklog.items.filter{ $0.complete == false }
-        case .completed:
-            //backlogItemsList = currentSelectedBacklog.items.filter{ $0.complete == true }
-        }*/
+        for i in 1 ..< backlogList.days.count{
+            prevDays.append(ExpandableListItemView(
+                title: dateFormatter.string(from: backlogList.days[i].currentDate),
+                items:backlogList.days[i].items))
+        }
+        return prevDays
     }
+    
     
     func addTask() {
         guard !newTask.isEmpty else {
             return
         }
         
-        /*let newItem = BacklogItem(task: newTask)
-        if currentSelectedBacklog.items.isEmpty{
-            currentSelectedBacklog.items.append(newItem)
+        let newItem = ActivityBacklogItem(task: newTask)
+        if currentBacklogList.items.isEmpty{
+            currentBacklogList.items.append(newItem)
         }else{
-            currentSelectedBacklog.items.insert(newItem, at: 1)
+            currentBacklogList.items.insert(newItem, at: 1)
         }
-        saveCategory()
+        if backlogList.days.isEmpty{
+            backlogList.days.append(currentBacklogList)
+        }else{
+            backlogList.days[0] = currentBacklogList
+        }
         saveItems()
-        changeCompleteCategory()
-        newTask = ""*/
+        newTask = ""
     }
     
-    func removeTask(_ item: BacklogItem) {
-        
-        /*currentSelectedBacklog.items.removeAll { $0.id == item.id }
-        saveCategory()
+    func removeTask(_ item: ActivityBacklogItem) {
+        currentBacklogList.items.removeAll { $0.id == item.id }
+        if backlogList.days.isEmpty{
+            backlogList.days.append(currentBacklogList)
+        }else{
+            backlogList.days[0] = currentBacklogList
+        }
         saveItems()
-        changeCompleteCategory()*/
     }
     
-    func completeTask(_ item: BacklogItem) {
-        /*for i in 1 ..< currentSelectedBacklog.items.count {
-            if currentSelectedBacklog.items[i].id == item.id{
-                currentSelectedBacklog.items[i].complete=true
-                currentSelectedBacklog.items[i].dateCompleted = Date()
+    func completeTask(_ item: ActivityBacklogItem) {
+        for i in 1 ..< currentBacklogList.items.count {
+            if currentBacklogList.items[i].id == item.id{
+                currentBacklogList.items[i].complete = true
             }
         }
-        if currentSelectedBacklog.currentItem.id == item.id{
-            setRandomItem()
+        if backlogList.days.isEmpty{
+            backlogList.days.append(currentBacklogList)
+        }else{
+            backlogList.days[0] = currentBacklogList
         }
-        changeCompleteCategory()
-        saveCategory()
-        saveItems()*/
+        saveItems()
     }
     
     func saveItems() {
