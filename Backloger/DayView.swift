@@ -81,7 +81,7 @@ struct DayView: View {
             .frame(height: 150)
             
             let completedItemsCount = currentSelectedBacklog.items.filter { $0.complete }.count
-            let progress = Float(completedItemsCount) / Float(currentSelectedBacklog.items.count)
+            let progress = currentSelectedBacklog.items.isEmpty ? 1 : Float(completedItemsCount) / Float(currentSelectedBacklog.items.count)
             let uncompleteItems = currentSelectedBacklog.items.filter { !$0.complete }
             let minHeight = CGFloat(uncompleteItems.count) * 80
             VStack {
