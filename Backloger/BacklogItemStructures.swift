@@ -11,17 +11,20 @@ struct BacklogItem : Identifiable, Codable{
     var id: UUID
     var task: String
     var complete: Bool
+    var dateAdded: Date
     
     init(task: String){
         self.id = UUID()
         self.task = task
         self.complete = false
+        self.dateAdded = Date()
     }
     
     init(){
         self.id = UUID()
         self.task = "task"
         self.complete = false
+        self.dateAdded = Date()
     }
 }
 
@@ -59,11 +62,13 @@ struct ActivityBacklogItem: Identifiable, Codable{
     let id: UUID
     let task: String
     let complete: Bool
+    var dateAdded: Date
     
     init(task: String){
         self.id = UUID()
         self.task=task
         self.complete = false
+        self.dateAdded = Date()
     }
 }
 
@@ -82,12 +87,14 @@ struct BuyBacklogItem : Identifiable, Codable{
     let task: String
     let price: Int
     let complete: Bool
+    var dateAdded: Date
     
     init(task: String){
         self.id = UUID()
         self.task=task
         self.price=0
         self.complete = false
+        self.dateAdded = Date()
     }
 }
 

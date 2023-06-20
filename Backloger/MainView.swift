@@ -7,22 +7,37 @@
 
 import SwiftUI
 
+struct GrowingButton: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .padding()
+            .background(.blue)
+            .foregroundStyle(.white)
+            .clipShape(Capsule())
+            .scaleEffect(configuration.isPressed ? 1.2 : 1)
+            .animation(.easeOut(duration: 0.2), value: configuration.isPressed)
+    }
+}
+
 struct MainView: View {
     var body: some View {
         NavigationView {
                     VStack {
-                        
-                        NavigationLink {
-                            DayView()
-                        } label: {
-                            Text("See day activities")
-                        }.buttonStyle(PlainButtonStyle())
-                        .padding([.bottom, .trailing], 20)
-                        NavigationLink {
-                            ContentView()
-                        } label: {
-                            Text("See backlog")
-                        }.buttonStyle(PlainButtonStyle())
+                        ZStack {
+                            LinearGradient(colors: [.red, .blue], startPoint: .top, endPoint: .bottom)
+                                .ignoresSafeArea()
+                            NavigationLink {
+                                DayView()
+                            } label: {
+                                Text("See day activities")
+                            }.buttonStyle(GrowingButton())
+                            .padding([.bottom, .trailing], 120)
+                            NavigationLink {
+                                ContentView()
+                            } label: {
+                                Text("See backlog")
+                            }.buttonStyle(GrowingButton())
+                        }
                     }
                     .navigationTitle("Main view")
                 }

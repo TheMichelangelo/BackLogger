@@ -58,7 +58,7 @@ struct ContentView: View {
                     .onChange(of: selectedCategory) { _ in
                         changeCategory()
                     }
-                    let totalProgress =  Float(currentSelectedBacklog.items.filter{$0.complete == true}.count) / Float(currentSelectedBacklog.items.count-1)
+                    let totalProgress =  Float(currentSelectedBacklog.items.filter{$0.complete == true}.count) / Float(currentSelectedBacklog.items.count)
                     ProgressView(value: totalProgress,total: 1)
                         .shadow(color: Color(red: 0, green: 0, blue: 0.6), radius: 4.0, x: 1.0, y: 2.0)
                     Label(currentSelectedBacklog.currentItem.task, systemImage: "bolt.fill")
@@ -75,7 +75,7 @@ struct ContentView: View {
                             Button(action:addTask){
                             Text("Add").foregroundColor(.white.opacity(0.7))
                         }.buttonStyle(.bordered)
-                    }
+                    }.padding(.bottom, 45)
                 }
             }
             .frame(height: 200)
@@ -153,7 +153,11 @@ struct ContentView: View {
         }
         
         let newItem = BacklogItem(task: newTask)
-        currentSelectedBacklog.items.append(newItem)
+        if currentSelectedBacklog.items.isEmpty{
+            currentSelectedBacklog.items.append(newItem)
+        }else{
+            currentSelectedBacklog.items.insert(newItem, at: 1)
+        }
         saveCategory()
         saveItems()
 
@@ -161,6 +165,7 @@ struct ContentView: View {
     }
     func setRandomItem(){
         currentSelectedBacklog.currentItem = currentSelectedBacklog.items.filter{ $0.complete == false }.randomElement()!
+        
         saveCategory()
         saveItems()
     }
