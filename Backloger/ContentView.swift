@@ -8,7 +8,7 @@
 import SwiftUI
 
 enum Category: String, CaseIterable, Identifiable {
-    case games_playstation, games_xbox, games_switch, games_PC, comics, books, activities
+    case games_playstation, games_xbox, games_switch, games_windows, comics, books, activities
     
     var id: Self { self }
 }
@@ -151,7 +151,7 @@ struct ContentView: View {
             currentSelectedBacklog = backlogList.playstationGameItems
         case .games_switch:
             currentSelectedBacklog = backlogList.switchGameItems
-        case .games_PC:
+        case .games_windows:
             currentSelectedBacklog = backlogList.pcGameItems
         case .games_xbox:
             currentSelectedBacklog = backlogList.xboxGameItems
@@ -170,7 +170,7 @@ struct ContentView: View {
             backlogList.playstationGameItems = currentSelectedBacklog
         case .games_switch:
             backlogList.switchGameItems = currentSelectedBacklog
-        case .games_PC:
+        case .games_windows:
             backlogList.pcGameItems = currentSelectedBacklog
         case .games_xbox:
             backlogList.xboxGameItems = currentSelectedBacklog

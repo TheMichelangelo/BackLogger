@@ -21,6 +21,9 @@ struct GrowingButton: ButtonStyle {
 
 struct MainView: View {
     var body: some View {
+        
+        let quotes = ["Screw that!", "D’oh!", "Jokes: Short, sweet, funny."]
+        
         NavigationView {
                     VStack {
                         ZStack {
@@ -39,7 +42,7 @@ struct MainView: View {
                             }.buttonStyle(GrowingButton())
                         }
                     }
-                    .navigationTitle("Main view")
+                    .navigationTitle(quotes.randomElement()!)
                 }
         }
 }
