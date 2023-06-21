@@ -51,12 +51,14 @@ struct ContentView: View {
                         changeCategory()
                     }
                     
-                    ProgressView(value: totalProgress,total: 1)
-                        .shadow(color: Color(red: 0, green: 0, blue: 0.6), radius: 4.0, x: 1.0, y: 2.0)
-                    Label(currentSelectedBacklog.currentItem.task, systemImage: "bolt.fill")
-                    Button(action:setRandomItem){
-                    Text("Randomise current").foregroundColor(.white.opacity(0.7))
-                    }.buttonStyle(.bordered)
+                    if !currentSelectedBacklog.items.isEmpty{
+                        ProgressView(value: totalProgress,total: 1)
+                            .shadow(color: Color(red: 0, green: 0, blue: 0.6), radius: 4.0, x: 1.0, y: 2.0)
+                        Label(currentSelectedBacklog.currentItem.task, systemImage: "bolt.fill")
+                        Button(action:setRandomItem){
+                        Text("Randomise current").foregroundColor(.white.opacity(0.7))
+                        }.buttonStyle(.bordered)
+                    }
                     
                     HStack{
                             TextField("New backlog item",text: $newTask)
@@ -97,7 +99,7 @@ struct ContentView: View {
                             Button(role: .destructive) {
                                 completeTask(item)
                             } label: {
-                                Label("Complete item", systemImage: "visa")
+                                Label("Complete item", systemImage: "briefcase.circle")
                             }
                         }
                     }
@@ -138,26 +140,19 @@ struct ContentView: View {
     func changeCategory() {
         switch selectedCategory {
         case .comics:
-            currentSelectedBacklog.currentItem = backlogList.comicsItems.currentItem
-            currentSelectedBacklog.items = backlogList.comicsItems.items
+            currentSelectedBacklog = backlogList.comicsItems
         case .books:
-            currentSelectedBacklog.currentItem = backlogList.bookItems.currentItem
-            currentSelectedBacklog.items = backlogList.bookItems.items
+            currentSelectedBacklog = backlogList.bookItems
         case .activities:
-            currentSelectedBacklog.currentItem = backlogList.activityItems.currentItem
-            currentSelectedBacklog.items = backlogList.activityItems.items
+            currentSelectedBacklog =  backlogList.activityItems
         case .games_playstation:
-            currentSelectedBacklog.currentItem = backlogList.playstationGameItems.currentItem
-            currentSelectedBacklog.items = backlogList.playstationGameItems.items
+            currentSelectedBacklog = backlogList.playstationGameItems
         case .games_switch:
-            currentSelectedBacklog.currentItem = backlogList.switchGameItems.currentItem
-            currentSelectedBacklog.items = backlogList.switchGameItems.items
+            currentSelectedBacklog = backlogList.switchGameItems
         case .games_windows:
-            currentSelectedBacklog.currentItem = backlogList.pcGameItems.currentItem
-            currentSelectedBacklog.items = backlogList.pcGameItems.items
+            currentSelectedBacklog = backlogList.pcGameItems
         case .games_xbox:
-            currentSelectedBacklog.currentItem = backlogList.xboxGameItems.currentItem
-            currentSelectedBacklog.items = backlogList.xboxGameItems.items
+            currentSelectedBacklog = backlogList.xboxGameItems
         }
         
         changeCompleteCategory()

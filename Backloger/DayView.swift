@@ -95,7 +95,7 @@ struct DayView: View {
                                 Button(role: .destructive) {
                                     completeTask(item)
                                 } label: {
-                                    Label("Complete item", systemImage: "visa")
+                                    Label("Complete item", systemImage: "briefcase.circle")
                                 }
                             }
                         }
