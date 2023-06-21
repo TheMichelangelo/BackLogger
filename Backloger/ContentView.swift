@@ -151,25 +151,6 @@ struct ContentView: View {
         totalProgress = currentSelectedBacklog.items.count == 0 ? 1 : Float(self.currentSelectedBacklog.items.filter{$0.complete == true}.count) / Float(self.currentSelectedBacklog.items.count)
     }
     
-    func saveCategory() {
-        switch selectedCategory {
-        case .comics:
-            backlogList.comicsItems  = currentSelectedBacklog
-        case .books:
-            backlogList.bookItems = currentSelectedBacklog
-        case .activities:
-            backlogList.activityItems = currentSelectedBacklog
-        case .games_playstation:
-            backlogList.playstationGameItems = currentSelectedBacklog
-        case .games_switch:
-            backlogList.switchGameItems = currentSelectedBacklog
-        case .games_windows:
-            backlogList.pcGameItems = currentSelectedBacklog
-        case .games_xbox:
-            backlogList.xboxGameItems = currentSelectedBacklog
-        }
-    }
-    
     func addTask() {
         guard !newTask.isEmpty else {
             return
@@ -184,19 +165,16 @@ struct ContentView: View {
                 return item1.task < item2.task
             }
         }
-        saveCategory()
         BacklogListAll.saveToStorage(backlogList: backlogList)
         changeCompleteCategory()
         newTask = ""
     }
     func setRandomItem(){
         currentSelectedBacklog.currentItem = backlogItemsList.randomElement()!
-        saveCategory()
         BacklogListAll.saveToStorage(backlogList: backlogList)
     }
     func removeTask(_ item: BacklogItem) {
         currentSelectedBacklog.items.removeAll { $0.id == item.id }
-        saveCategory()
         BacklogListAll.saveToStorage(backlogList: backlogList)
         changeCompleteCategory()
     }
@@ -212,7 +190,6 @@ struct ContentView: View {
             setRandomItem()
         }
         changeCompleteCategory()
-        saveCategory()
         BacklogListAll.saveToStorage(backlogList: backlogList)
     }
 }

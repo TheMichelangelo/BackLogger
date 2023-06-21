@@ -16,17 +16,7 @@ struct DayView: View {
     init() {
         _newTask = State(initialValue: "")
         currentSelectedBacklog = DayActivityBacklogList()
-        if let data = UserDefaults.standard.data(forKey: "activityBacklogList") {
-            let decoder = JSONDecoder()
-            if let decodedTasks = try? decoder.decode(ActivityBacklogListAll.self, from: data) {
-                backlogList = decodedTasks
-            } else {
-                backlogList = ActivityBacklogListAll()
-            }
-        
-        } else {
-            backlogList = ActivityBacklogListAll()
-        }
+        backlogList = ActivityBacklogListAll.loadFromStorage()
         if backlogList.days.isEmpty{
             let activityBaklogItem = DayActivityBacklogList()
             backlogList.days.append(activityBaklogItem)
@@ -83,12 +73,12 @@ struct DayView: View {
             let completedItemsCount = currentSelectedBacklog.items.filter { $0.complete }.count
             let progress = currentSelectedBacklog.items.isEmpty ? 1 : Float(completedItemsCount) / Float(currentSelectedBacklog.items.count)
             let uncompleteItems = currentSelectedBacklog.items.filter { !$0.complete }
-            let minHeight = uncompleteItems.count>3 ? 200 : CGFloat(uncompleteItems.count) * 80
+            let minHeight = uncompleteItems.count > 3 ? 200 : CGFloat(uncompleteItems.count) * 80
             VStack {
                 DisclosureGroup(isExpanded: $isExpanded) {
                     VStack {
                         ProgressView(value: progress, total: 1)
-                        List(uncompleteItems) { item in
+                        List(currentSelectedBacklog.items.filter { !$0.complete }) { item in
                             HStack {
                                 Text(item.task)
                                     .padding(.leading)
@@ -162,22 +152,13 @@ struct DayView: View {
                 return item1.task < item2.task
                 }
         }
-        if backlogList.days.isEmpty{
-            backlogList.days.append(currentSelectedBacklog)
-        }else{
-            backlogList.days[0] = currentSelectedBacklog
-        }
-        saveItems()
+        ActivityBacklogListAll.saveToStorage(backlogList: backlogList)
         newTask = ""
     }
+    
     func removeTask(_ item: ActivityBacklogItem) {
         currentSelectedBacklog.items.removeAll { $0.id == item.id }
-        if backlogList.days.isEmpty{
-            backlogList.days.append(currentSelectedBacklog)
-        }else{
-            backlogList.days[0] = currentSelectedBacklog
-        }
-        saveItems()
+        ActivityBacklogListAll.saveToStorage(backlogList: backlogList)
     }
     func completeTask(_ item: ActivityBacklogItem) {
         for i in 0 ..< currentSelectedBacklog.items.count {
@@ -185,19 +166,9 @@ struct DayView: View {
                 currentSelectedBacklog.items[i].complete=true
             }
         }
-        if backlogList.days.isEmpty{
-            backlogList.days.append(currentSelectedBacklog)
-        }else{
-            backlogList.days[0] = currentSelectedBacklog
-        }
-        saveItems()
+        ActivityBacklogListAll.saveToStorage(backlogList: backlogList)
     }
     
-    func saveItems() {
-        if let encoded = try? JSONEncoder().encode(backlogList) {
-            UserDefaults.standard.set(encoded, forKey: "activityBacklogList")
-        }
-    }
 }
 
 struct DayView_Previews: PreviewProvider {

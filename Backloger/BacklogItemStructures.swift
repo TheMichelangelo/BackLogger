@@ -168,6 +168,23 @@ class ActivityBacklogListAll : Codable, Hashable, ObservableObject{
     func hash(into hasher: inout Hasher) {
             hasher.combine(days)
     }
+    
+    static func loadFromStorage() -> ActivityBacklogListAll {
+        if let data = UserDefaults.standard.data(forKey: "activityBacklogList") {
+            let decoder = JSONDecoder()
+            if let decodedTasks = try? decoder.decode(ActivityBacklogListAll.self, from: data) {
+                return decodedTasks
+            }
+            return ActivityBacklogListAll()
+        }
+        return ActivityBacklogListAll()
+    }
+    
+    static func saveToStorage(backlogList: ActivityBacklogListAll){
+        if let encoded = try? JSONEncoder().encode(backlogList) {
+            UserDefaults.standard.set(encoded, forKey: "activityBacklogList")
+        }
+    }
 }
 
 enum CompleteCategory: String, CaseIterable, Identifiable {
