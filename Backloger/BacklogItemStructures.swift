@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct BacklogItem : Identifiable, Codable{
+class BacklogItem : Identifiable, Codable, Hashable, ObservableObject{
     var id: UUID
     var task: String
     var complete: Bool
@@ -29,9 +29,18 @@ struct BacklogItem : Identifiable, Codable{
         self.dateAdded = Date()
         self.dateCompleted = Date()
     }
+    
+    static func == (lhs: BacklogItem, rhs: BacklogItem) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+            hasher.combine(id)
+            hasher.combine(task)
+    }
 }
 
-struct BacklogList : Codable{
+class BacklogList : Codable, Hashable, ObservableObject{
     var currentItem: BacklogItem
     var items: [BacklogItem]
     
@@ -39,9 +48,18 @@ struct BacklogList : Codable{
         currentItem=BacklogItem()
         items=[]
     }
+    
+    static func == (lhs: BacklogList, rhs: BacklogList) -> Bool {
+        return lhs.currentItem == rhs.currentItem && lhs.items == rhs.items
+    }
+    
+    func hash(into hasher: inout Hasher) {
+            hasher.combine(currentItem)
+            hasher.combine(items)
+    }
 }
 
-struct BacklogListAll : Codable{
+class BacklogListAll : Codable, Hashable, ObservableObject{
     var bookItems: BacklogList
     var comicsItems: BacklogList
     var playstationGameItems: BacklogList
@@ -59,10 +77,20 @@ struct BacklogListAll : Codable{
         pcGameItems=BacklogList()
         activityItems=BacklogList()
     }
+    
+    static func == (lhs: BacklogListAll, rhs: BacklogListAll) -> Bool {
+        return lhs.bookItems == rhs.bookItems && lhs.comicsItems == rhs.comicsItems
+        && lhs.playstationGameItems == rhs.playstationGameItems && lhs.activityItems == rhs.activityItems
+    }
+    
+    func hash(into hasher: inout Hasher) {
+            hasher.combine(bookItems)
+            hasher.combine(comicsItems)
+    }
 }
 
 //---------DAY ACTIVITY-------------------
-struct ActivityBacklogItem: Identifiable, Codable, Hashable{
+class ActivityBacklogItem: Identifiable, Codable, Hashable, ObservableObject{
     var id: UUID
     var task: String
     var complete: Bool
@@ -74,9 +102,18 @@ struct ActivityBacklogItem: Identifiable, Codable, Hashable{
         self.complete = false
         self.dateAdded = Date()
     }
+    
+    static func == (lhs: ActivityBacklogItem, rhs: ActivityBacklogItem) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+            hasher.combine(id)
+            hasher.combine(task)
+    }
 }
 
-struct DayActivityBacklogList : Codable{
+class DayActivityBacklogList : Codable, Hashable, ObservableObject{
     var currentDate: Date
     var items: [ActivityBacklogItem]
     
@@ -89,42 +126,31 @@ struct DayActivityBacklogList : Codable{
         self.currentDate = Date()
         self.items = [ActivityBacklogItem]()
     }
+    
+    static func == (lhs: DayActivityBacklogList, rhs: DayActivityBacklogList) -> Bool {
+        return lhs.currentDate == rhs.currentDate
+    }
+    
+    func hash(into hasher: inout Hasher) {
+            hasher.combine(currentDate)
+            hasher.combine(items)
+    }
 }
 
-struct ActivityBacklogListAll : Codable{
+class ActivityBacklogListAll : Codable, Hashable, ObservableObject{
     var days: [DayActivityBacklogList]
     
     init(){
         self.days = [DayActivityBacklogList]()
     }
-}
-
-//TODO use in future if develipment will continue
-struct BuyBacklogItem : Identifiable, Codable{
-    let id: UUID
-    let task: String
-    let price: Int
-    let complete: Bool
-    var dateAdded: Date
     
-    init(task: String){
-        self.id = UUID()
-        self.task=task
-        self.price=0
-        self.complete = false
-        self.dateAdded = Date()
+    static func == (lhs: ActivityBacklogListAll, rhs: ActivityBacklogListAll) -> Bool {
+        return lhs.days == rhs.days
     }
-}
-
-struct BuyBacklogList : Codable{
-    let items: [BuyBacklogItem]
-}
-
-struct BuyBacklogListAll : Codable{
-    let bookItems: [BacklogList]
-    let comicsItems: [BacklogList]
-    let gameItems: [BacklogList]
-    let activityItems: [BacklogList]
+    
+    func hash(into hasher: inout Hasher) {
+            hasher.combine(days)
+    }
 }
 
 enum CompleteCategory: String, CaseIterable, Identifiable {

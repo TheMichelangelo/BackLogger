@@ -10,27 +10,27 @@ import SwiftUI
 struct DayView: View {
     @State private var newTask: String = ""
     @State private var isExpanded = false
-    @State private var backlogList: ActivityBacklogListAll
-    @State private var currentSelectedBacklog: DayActivityBacklogList
+    @ObservedObject private var backlogList: ActivityBacklogListAll
+    @ObservedObject private var currentSelectedBacklog: DayActivityBacklogList
     
     init() {
         _newTask = State(initialValue: "")
-        _currentSelectedBacklog = State(initialValue: DayActivityBacklogList())
+        currentSelectedBacklog = DayActivityBacklogList()
         if let data = UserDefaults.standard.data(forKey: "activityBacklogList") {
             let decoder = JSONDecoder()
             if let decodedTasks = try? decoder.decode(ActivityBacklogListAll.self, from: data) {
-                _backlogList = State(initialValue: decodedTasks)
+                backlogList = decodedTasks
             } else {
-                _backlogList = State(initialValue: ActivityBacklogListAll())
+                backlogList = ActivityBacklogListAll()
             }
         
         } else {
-            _backlogList = State(initialValue: ActivityBacklogListAll())
+            backlogList = ActivityBacklogListAll()
         }
         if backlogList.days.isEmpty{
             let activityBaklogItem = DayActivityBacklogList()
             backlogList.days.append(activityBaklogItem)
-            _currentSelectedBacklog = State(initialValue: activityBaklogItem)
+            currentSelectedBacklog = activityBaklogItem
         }else{
             let currentDate = Date()
             let isItemWithCurrentDateExists = backlogList.days.contains { dayActivity in Calendar.current.isDate(dayActivity.currentDate, inSameDayAs: currentDate)
@@ -38,14 +38,14 @@ struct DayView: View {
             if isItemWithCurrentDateExists {
                 for dayActivity in backlogList.days {
                     if Calendar.current.isDate(dayActivity.currentDate, inSameDayAs: currentDate) {
-                        _currentSelectedBacklog = State(initialValue: backlogList.days.first!)
+                        currentSelectedBacklog = backlogList.days.first!
                     }
                 }
             }else {
                 let previousDayActivity  = backlogList.days.first!
                 let activities = previousDayActivity.items.filter{ $0.complete == false }
                 let activityBacklogItem = DayActivityBacklogList(items: activities)
-                _currentSelectedBacklog = State(initialValue: activityBacklogItem)
+                currentSelectedBacklog = activityBacklogItem
                 backlogList.days.append(activityBacklogItem)
                 backlogList.days.sort { (item1, item2) -> Bool in
                     return item1.currentDate > item2.currentDate

@@ -57,18 +57,11 @@ struct ShopListView: View {
                             Text(item.task)
                                 .foregroundColor(.blue)
                         }
-                        .swipeActions(edge: .leading) {
+                        .swipeActions() {
                             Button(role: .destructive) {
                                 removeTask(item)
                             } label: {
                                 Label("Delete item", systemImage: "trash")
-                            }
-                        }
-                        .swipeActions(edge: .trailing) {
-                            Button(role: .destructive) {
-                                completeTask(item)
-                            } label: {
-                                Label("Complete item", systemImage: "visa")
                             }
                         }
                     }
