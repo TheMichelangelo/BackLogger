@@ -13,8 +13,8 @@ struct ContentView: View {
     @State private var newTask: String = ""
     @State private var totalProgress: Float
     @ObservedObject private var backlogList: BacklogListAll
-    @State private var backlogItemsList: [BacklogItem]
     @State private var currentSelectedBacklog: BacklogList
+    @State private var backlogItemsList: [BacklogItem]
     
     init() {
         _totalProgress = State(initialValue: 1.0)
@@ -25,13 +25,11 @@ struct ContentView: View {
         backlogList = BacklogListAll.loadFromStorage()
         _currentSelectedBacklog = State(initialValue: backlogList.comicsItems)
         _backlogItemsList = State(initialValue: currentSelectedBacklog.items.filter{ $0.complete == false })
-        if !_currentSelectedBacklog.wrappedValue.items.isEmpty{
-            let completedItemsCount = currentSelectedBacklog.items.filter { $0.complete }.count
-            let progress = Float(completedItemsCount) / Float(currentSelectedBacklog.items.count)
-            _totalProgress = State(initialValue: progress)
+        if !_currentSelectedBacklog.wrappedValue.items.isEmpty {
+            totalProgress = currentSelectedBacklog.items.count == 0 ? 1 : Float(self.currentSelectedBacklog.items.filter{$0.complete == true}.count) / Float(self.currentSelectedBacklog.items.count)
         }
     }
-    
+
     var body: some View {
         VStack {
             ZStack {
@@ -119,6 +117,14 @@ struct ContentView: View {
         }
     }
     
+    func getBacklogItemsList()-> [BacklogItem] {
+        switch completedCategory {
+        case .uncompleted:
+            return currentSelectedBacklog.items.filter{ $0.complete == false }
+        case .completed:
+            return currentSelectedBacklog.items.filter{ $0.complete == true }
+        }
+    }
     
     func changeCompleteCategory() {
         switch completedCategory {
@@ -132,19 +138,26 @@ struct ContentView: View {
     func changeCategory() {
         switch selectedCategory {
         case .comics:
-            currentSelectedBacklog = backlogList.comicsItems
+            currentSelectedBacklog.currentItem = backlogList.comicsItems.currentItem
+            currentSelectedBacklog.items = backlogList.comicsItems.items
         case .books:
-            currentSelectedBacklog = backlogList.bookItems
+            currentSelectedBacklog.currentItem = backlogList.bookItems.currentItem
+            currentSelectedBacklog.items = backlogList.bookItems.items
         case .activities:
-            currentSelectedBacklog = backlogList.activityItems
+            currentSelectedBacklog.currentItem = backlogList.activityItems.currentItem
+            currentSelectedBacklog.items = backlogList.activityItems.items
         case .games_playstation:
-            currentSelectedBacklog = backlogList.playstationGameItems
+            currentSelectedBacklog.currentItem = backlogList.playstationGameItems.currentItem
+            currentSelectedBacklog.items = backlogList.playstationGameItems.items
         case .games_switch:
-            currentSelectedBacklog = backlogList.switchGameItems
+            currentSelectedBacklog.currentItem = backlogList.switchGameItems.currentItem
+            currentSelectedBacklog.items = backlogList.switchGameItems.items
         case .games_windows:
-            currentSelectedBacklog = backlogList.pcGameItems
+            currentSelectedBacklog.currentItem = backlogList.pcGameItems.currentItem
+            currentSelectedBacklog.items = backlogList.pcGameItems.items
         case .games_xbox:
-            currentSelectedBacklog = backlogList.xboxGameItems
+            currentSelectedBacklog.currentItem = backlogList.xboxGameItems.currentItem
+            currentSelectedBacklog.items = backlogList.xboxGameItems.items
         }
         
         changeCompleteCategory()
@@ -157,22 +170,22 @@ struct ContentView: View {
         }
         
         let newItem = BacklogItem(task: newTask)
-        if currentSelectedBacklog.items.isEmpty{
-            currentSelectedBacklog.items.append(newItem)
-        }else{
-            currentSelectedBacklog.items.insert(newItem, at: 1)
-            currentSelectedBacklog.items.sort { (item1, item2) -> Bool in
-                return item1.task < item2.task
-            }
+        
+        currentSelectedBacklog.items.append(newItem)
+        currentSelectedBacklog.items.sort { (item1, item2) -> Bool in
+            return item1.task < item2.task
         }
+           
         BacklogListAll.saveToStorage(backlogList: backlogList)
         changeCompleteCategory()
         newTask = ""
     }
+    
     func setRandomItem(){
         currentSelectedBacklog.currentItem = backlogItemsList.randomElement()!
         BacklogListAll.saveToStorage(backlogList: backlogList)
     }
+    
     func removeTask(_ item: BacklogItem) {
         currentSelectedBacklog.items.removeAll { $0.id == item.id }
         BacklogListAll.saveToStorage(backlogList: backlogList)
@@ -180,9 +193,9 @@ struct ContentView: View {
     }
     
     func completeTask(_ item: BacklogItem) {
-        for i in 1 ..< currentSelectedBacklog.items.count {
+        for i in 0 ..< currentSelectedBacklog.items.count {
             if currentSelectedBacklog.items[i].id == item.id{
-                currentSelectedBacklog.items[i].complete=true
+                currentSelectedBacklog.items[i].complete = true
                 currentSelectedBacklog.items[i].dateCompleted = Date()
             }
         }
