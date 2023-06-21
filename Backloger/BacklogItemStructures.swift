@@ -83,6 +83,23 @@ class BacklogListAll : Codable, Hashable, ObservableObject{
         && lhs.playstationGameItems == rhs.playstationGameItems && lhs.activityItems == rhs.activityItems
     }
     
+    static func loadFromStorage() -> BacklogListAll {
+        if let data = UserDefaults.standard.data(forKey: "backlogList") {
+            let decoder = JSONDecoder()
+            if let decodedTasks = try? decoder.decode(BacklogListAll.self, from: data) {
+                return decodedTasks
+            }
+            return BacklogListAll()
+        }
+        return BacklogListAll()
+    }
+    
+    static func saveToStorage(backlogList: BacklogListAll){
+        if let encoded = try? JSONEncoder().encode(backlogList) {
+            UserDefaults.standard.set(encoded, forKey: "backlogList")
+        }
+    }
+    
     func hash(into hasher: inout Hasher) {
             hasher.combine(bookItems)
             hasher.combine(comicsItems)
@@ -156,5 +173,10 @@ class ActivityBacklogListAll : Codable, Hashable, ObservableObject{
 enum CompleteCategory: String, CaseIterable, Identifiable {
     case completed, uncompleted
     
+    var id: Self { self }
+}
+
+enum Category: String, CaseIterable, Identifiable {
+    case games_playstation, games_xbox, games_switch, games_windows, comics, books, activities
     var id: Self { self }
 }

@@ -83,6 +83,9 @@ struct ShopListView: View {
             backlogItemsList.append(newItem)
         }else{
             backlogItemsList.insert(newItem, at: 1)
+            backlogItemsList.sort { (item1, item2) -> Bool in
+                return item1.task < item2.task
+                }
         }
         saveItems()
         newTask = ""

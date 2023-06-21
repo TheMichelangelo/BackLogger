@@ -7,12 +7,6 @@
 
 import SwiftUI
 
-enum Category: String, CaseIterable, Identifiable {
-    case games_playstation, games_xbox, games_switch, games_windows, comics, books, activities
-    
-    var id: Self { self }
-}
-
 struct ContentView: View {
     @State private var completedCategory: CompleteCategory = .uncompleted
     @State private var selectedCategory: Category = .comics
@@ -28,16 +22,7 @@ struct ContentView: View {
         _newTask = State(initialValue: "")
         _backlogItemsList = State(initialValue: [BacklogItem]())
         _currentSelectedBacklog = State(initialValue: BacklogList())
-        if let data = UserDefaults.standard.data(forKey: "backlogList") {
-            let decoder = JSONDecoder()
-            if let decodedTasks = try? decoder.decode(BacklogListAll.self, from: data) {
-                backlogList = decodedTasks
-            } else {
-                backlogList = BacklogListAll()
-            }
-        } else {
-            backlogList = BacklogListAll()
-        }
+        backlogList = BacklogListAll.loadFromStorage()
         _currentSelectedBacklog = State(initialValue: backlogList.comicsItems)
         _backlogItemsList = State(initialValue: currentSelectedBacklog.items.filter{ $0.complete == false })
         if !_currentSelectedBacklog.wrappedValue.items.isEmpty{
@@ -196,24 +181,23 @@ struct ContentView: View {
         }else{
             currentSelectedBacklog.items.insert(newItem, at: 1)
             currentSelectedBacklog.items.sort { (item1, item2) -> Bool in
-                return item1.task > item2.task
+                return item1.task < item2.task
             }
         }
         saveCategory()
-        saveItems()
+        BacklogListAll.saveToStorage(backlogList: backlogList)
         changeCompleteCategory()
         newTask = ""
     }
     func setRandomItem(){
         currentSelectedBacklog.currentItem = backlogItemsList.randomElement()!
-        
         saveCategory()
-        saveItems()
+        BacklogListAll.saveToStorage(backlogList: backlogList)
     }
     func removeTask(_ item: BacklogItem) {
         currentSelectedBacklog.items.removeAll { $0.id == item.id }
         saveCategory()
-        saveItems()
+        BacklogListAll.saveToStorage(backlogList: backlogList)
         changeCompleteCategory()
     }
     
@@ -229,13 +213,7 @@ struct ContentView: View {
         }
         changeCompleteCategory()
         saveCategory()
-        saveItems()
-    }
-    
-    func saveItems() {
-        if let encoded = try? JSONEncoder().encode(backlogList) {
-            UserDefaults.standard.set(encoded, forKey: "backlogList")
-        }
+        BacklogListAll.saveToStorage(backlogList: backlogList)
     }
 }
 
