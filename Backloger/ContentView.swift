@@ -17,9 +17,9 @@ struct ContentView: View {
     @State private var completedCategory: CompleteCategory = .uncompleted
     @State private var selectedCategory: Category = .comics
     @State private var newTask: String = ""
-    @State private var backlogList: BacklogListAll
-    @State private var backlogItemsList: [BacklogItem]
     @State private var totalProgress: Float
+    @ObservedObject private var backlogList: BacklogListAll
+    @State private var backlogItemsList: [BacklogItem]
     @State private var currentSelectedBacklog: BacklogList
     
     init() {
@@ -31,12 +31,12 @@ struct ContentView: View {
         if let data = UserDefaults.standard.data(forKey: "backlogList") {
             let decoder = JSONDecoder()
             if let decodedTasks = try? decoder.decode(BacklogListAll.self, from: data) {
-                _backlogList = State(initialValue: decodedTasks)
+                backlogList = decodedTasks
             } else {
-                _backlogList = State(initialValue: BacklogListAll())
+                backlogList = BacklogListAll()
             }
         } else {
-            _backlogList = State(initialValue: BacklogListAll())
+            backlogList = BacklogListAll()
         }
         _currentSelectedBacklog = State(initialValue: backlogList.comicsItems)
         _backlogItemsList = State(initialValue: currentSelectedBacklog.items.filter{ $0.complete == false })
@@ -195,6 +195,9 @@ struct ContentView: View {
             currentSelectedBacklog.items.append(newItem)
         }else{
             currentSelectedBacklog.items.insert(newItem, at: 1)
+            currentSelectedBacklog.items.sort { (item1, item2) -> Bool in
+                return item1.task > item2.task
+            }
         }
         saveCategory()
         saveItems()

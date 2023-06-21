@@ -158,6 +158,9 @@ struct DayView: View {
             currentSelectedBacklog.items.append(newItem)
         }else{
             currentSelectedBacklog.items.insert(newItem, at: 1)
+            currentSelectedBacklog.items.sort { (item1, item2) -> Bool in
+                return item1.task > item2.task
+                }
         }
         if backlogList.days.isEmpty{
             backlogList.days.append(currentSelectedBacklog)
