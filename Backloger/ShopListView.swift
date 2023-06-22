@@ -81,13 +81,9 @@ struct ShopListView: View {
         }
         
         let newItem = BacklogItem(task: newTask)
-        if backlogItemsList.isEmpty{
-            backlogItemsList.append(newItem)
-        }else{
-            backlogItemsList.insert(newItem, at: 1)
-            backlogItemsList.sort { (item1, item2) -> Bool in
-                return item1.task < item2.task
-                }
+        backlogItemsList.append(newItem)
+        backlogItemsList.sort { (item1, item2) -> Bool in
+            return item1.task < item2.task
         }
         saveItems()
         newTask = ""
@@ -100,7 +96,7 @@ struct ShopListView: View {
     func completeTask(_ item: BacklogItem) {
         for i in 0 ..< backlogItemsList.count {
             if backlogItemsList[i].id == item.id{
-                backlogItemsList[i].complete=true
+                backlogItemsList[i].complete = true
                 backlogItemsList[i].dateCompleted = Date()
             }
         }

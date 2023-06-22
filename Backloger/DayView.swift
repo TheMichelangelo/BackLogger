@@ -146,13 +146,9 @@ struct DayView: View {
         }
         
         let newItem = ActivityBacklogItem(task: newTask)
-        if currentSelectedBacklog.items.isEmpty{
-            currentSelectedBacklog.items.append(newItem)
-        }else{
-            currentSelectedBacklog.items.insert(newItem, at: 1)
-            currentSelectedBacklog.items.sort { (item1, item2) -> Bool in
-                return item1.task < item2.task
-                }
+        currentSelectedBacklog.items.append(newItem)
+        currentSelectedBacklog.items.sort { (item1, item2) -> Bool in
+            return item1.task < item2.task
         }
         ActivityBacklogListAll.saveToStorage(backlogList: backlogList)
         newTask = ""
@@ -165,7 +161,7 @@ struct DayView: View {
     func completeTask(_ item: ActivityBacklogItem) {
         for i in 0 ..< currentSelectedBacklog.items.count {
             if currentSelectedBacklog.items[i].id == item.id{
-                currentSelectedBacklog.items[i].complete=true
+                currentSelectedBacklog.items[i].complete = true
             }
         }
         ActivityBacklogListAll.saveToStorage(backlogList: backlogList)
