@@ -141,7 +141,7 @@ class DayActivityBacklogList : Codable, Hashable, ObservableObject{
     
     init(items: [ActivityBacklogItem]){
         self.currentDate = Date()
-        self.items = [ActivityBacklogItem]()
+        self.items = items
     }
     
     static func == (lhs: DayActivityBacklogList, rhs: DayActivityBacklogList) -> Bool {
