@@ -26,7 +26,7 @@ struct ContentView: View {
         _currentSelectedBacklog = State(initialValue: backlogList.comicsItems)
         _backlogItemsList = State(initialValue: currentSelectedBacklog.items.filter{ $0.complete == false })
         if !_currentSelectedBacklog.wrappedValue.items.isEmpty {
-            totalProgress = currentSelectedBacklog.items.count == 0 ? 1 : Float(self.currentSelectedBacklog.items.filter{$0.complete == true}.count) / Float(self.currentSelectedBacklog.items.count)
+            _totalProgress = State(initialValue: self.currentSelectedBacklog.items.count == 0 ? Float(1) : Float(self.currentSelectedBacklog.items.filter{$0.complete == true}.count) / Float(self.currentSelectedBacklog.items.count))
         }
     }
 
@@ -137,6 +137,7 @@ struct ContentView: View {
         case .completed:
             backlogItemsList = currentSelectedBacklog.items.filter{ $0.complete == true }
         }
+        totalProgress = currentSelectedBacklog.items.count == 0 ? 1 : Float(self.currentSelectedBacklog.items.filter{$0.complete == true}.count) / Float(self.currentSelectedBacklog.items.count)
     }
     
     func changeCategory() {
@@ -158,7 +159,6 @@ struct ContentView: View {
         }
         
         changeCompleteCategory()
-        totalProgress = currentSelectedBacklog.items.count == 0 ? 1 : Float(self.currentSelectedBacklog.items.filter{$0.complete == true}.count) / Float(self.currentSelectedBacklog.items.count)
     }
     
     func addTask() {

@@ -29,7 +29,7 @@ struct DayView: View {
                 for dayActivity in backlogList.days {
                     if Calendar.current.isDate(dayActivity.currentDate, inSameDayAs: currentDate) {
                         currentSelectedBacklog = backlogList.days.first!
-                    }
+                    } 
                 }
             }else {
                 let previousDayActivity  = backlogList.days.first!
